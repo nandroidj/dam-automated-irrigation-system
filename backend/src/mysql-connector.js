@@ -1,35 +1,34 @@
-
 var mysql = require('mysql');
 
 var pool = mysql.createPool({
-    connectionLimit: 10,
-    host     : 'mysql-server',
-    port     : '3306',
-    user     : 'root',
-    password : 'userpass',
-    database : 'DAM'
+ 
+  connectionLimit: 10,
+  host     : 'mysql-server',
+  port     : '3306',
+  user     : 'root',
+  password : 'userpass',
+  database : 'DAM'
+
 });
 
-// Conexión de prueba
-pool.getConnection((err, connection) => {
-    if (err) {
-        switch (err.code) {
-            case 'PROTOCOL_CONNECTION_LOST':
-                console.error('La conexion a la DB se cerró.');
-                break;
-            case 'ER_CON_COUNT_ERROR':
-                console.error('La base de datos tiene muchas conexiones');
-                break;
-            case 'ECONNREFUSED':
-                console.error('La conexion fue rechazada');
-        }
 
-        if (connection) {
-            connection.release();
-        }
+// Testeo de la conexión + tratamiento de errores
+pool.getConnection((err, connection) => {
+ 
+    if (err) {
+
+        console.log(
+          err.code === 'PROTOCOL_CONNECTION_LOST' ? 'PROTOCOL_CONNECTION_LOST' :
+          err.code === 'ER_CON_COUNT_ERROR' ? 'ER_CON_COUNT_ERROR' :
+          err.code === 'ECONNREFUSED' ? 'ECONNREFUSED' :
+          'API funcionando'
+        )
+
+        if (connection) connection.release();
 
         return;
     }
 });
 
 module.exports = pool;
+

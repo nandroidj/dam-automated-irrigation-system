@@ -1,9 +1,10 @@
 
 const PORT    = 3000;
-const cors  = require("cors");
+
+const cors    = require("cors");
 const express = require('express');
 const app     = express();
-
+const utils   = require('./mysql-connector');
 
 let corsOptions = {
 	origin: "*",
@@ -14,16 +15,24 @@ app.use(cors(corsOptions));
 
 app.use(express.json()); 
 
-const dispositivoRoutes = require("./dispositivo/routes");
+// Rutas Dispositivo
+const dispositivoRoutes = require("./device/routes");
 app.use("/dispositivo", dispositivoRoutes);
 
-const medicionRoutes = require("./medicion/routes");
+
+// Rutas Medicion
+const medicionRoutes = require("./measurement/routes");
 app.use("/medicion", medicionRoutes);
 
-const riegoRoutes = require("./riego/routes");
-app.use("/riego", riegoRoutes);
+
+// Rutas Riego
+const irrigationRoutes = require("./irrigation/routes");
+app.use("/riego", irrigationRoutes);
 
 
-app.listen(function(req, res) {
-    console.log("API funcionando correctamente !");
-});
+app.listen(
+  PORT, 
+  function(req, res) {
+    console.log("API funcionando");
+  }
+);
